@@ -23,8 +23,8 @@ class Transaction(Base):
 class User(Base):
     __tablename__ = 'users'
     user_id = Column(Integer, primary_key=True, autoincrement=True)
-    username = Column(String)
-    surname = Column(String)
+    name = Column(String)
+    lastname = Column(String)
     phone_number = Column(String, unique=True)
     email = Column(String)
     password = Column(String)
@@ -44,8 +44,8 @@ class Cart(Base):
     expiry_date = Column(Date)
     balance = Column(Float)
     type = Column(String)  # (Виза, Мастеркарт, обычная и т.д.)
-    # logo_bank = Column не знаю, надо ли...
-
+    cvv = Column(Integer)
+    cart_number = Column(Integer)
     user_id = Column(Integer, ForeignKey('users.user_id'))
 
     transactions = relationship('Transaction', foreign_keys=[Transaction. cart_id])
