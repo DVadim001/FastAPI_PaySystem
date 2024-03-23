@@ -50,4 +50,3 @@ class Cart(Base):
 
     transactions = relationship('Transaction', foreign_keys=[Transaction. cart_id])
     cart_holder = relationship('User', back_populates='carts')
-
