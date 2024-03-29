@@ -1,11 +1,11 @@
 # Какой язык программирования
 FROM python:latest
 
-# Устанавливаем рабочую директорию в контейнере
-WORKDIR /paysystem
-
 # Копируем наш проект внутри папки (Docker)
 COPY . /paysystem
+
+# Устанавливаем рабочую директорию в контейнере
+WORKDIR /paysystem
 
 # Скачтваем все библиотеки
 RUN pip install -r requirements.txt

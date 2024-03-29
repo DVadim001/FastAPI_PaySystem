@@ -1,4 +1,4 @@
-from database.models import UserCard, Tranfer
+from database.models import UserCard, Transfer
 from datetime import datetime
 from database import get_db
 
@@ -27,7 +27,7 @@ def create_transaction_db(card_from, card_to, amount):
             card_to.balance += amount
 
             # Сохраняем платёж в БД
-            new_transaction = Tranfer(card_from_number=checker_card_from.card_number,
+            new_transaction = Transfer(card_from_number=checker_card_from.card_number,
                                       card_to_number=checker_card_to.card_number,
                                       amount=amount,
                                       transaction_date=datetime.now())
@@ -44,13 +44,33 @@ def create_transaction_db(card_from, card_to, amount):
 def get_history_transaction(card_from_number):
     db = next(get_db())
 
-    card_transaction = db.query(Tranfer).filter_by(card_from_number=card_from_number).all()
+    card_transaction = db.query(Transfer).filter_by(card_from_number=card_from_number).all()
     if card_transaction:
         return card_transaction
     else:
         return "Истории нет"
 
 
-# Отмена транзакции. Подсказка status = False
-def cancel_transaction_db(card_from, card_to, amount):
-    pass
+# Отмена транзакции.
+def cancel_transaction_db(card_from, card_to, amount, transfer_id):
+    db = next(get_db())
+
+    # Проверка на наличие обеих карт в БД
+    checker_card_from = validate_card(card_from, db)
+    checker_card_to = validate_card(card_to, db)
+
+    if checker_card_from and checker_card_to:
+        transaction_to_cancel = db.query(Transfer).filter_by(transfer_id=transfer_id).first()
+        if transaction_to_cancel:
+            checker_card_from.balance += amount
+            checker_card_to.balance -= amount
+            transaction_to_cancel.status = False
+
+            db.delete(transaction_to_cancel)
+            db.commit()
+
+            return "Перевод отменён"
+        else:
+            return "Транзакция не найдена"
+    else:
+        return "Одна из карт не существует"

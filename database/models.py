@@ -29,7 +29,7 @@ class UserCard(Base):
     cvv = Column(Integer)
 
 
-class Tranfer(Base):
+class Transfer(Base):
     __tablename__ = 'transactions'
     transfer_id = Column(Integer, primary_key=True, autoincrement=True)
     card_from_number = Column(Integer, ForeignKey('cards.card_number'))
