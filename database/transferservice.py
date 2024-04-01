@@ -28,9 +28,9 @@ def create_transaction_db(card_from, card_to, amount):
 
             # Сохраняем платёж в БД
             new_transaction = Transfer(card_from_number=checker_card_from.card_number,
-                                      card_to_number=checker_card_to.card_number,
-                                      amount=amount,
-                                      transaction_date=datetime.now())
+                                       card_to_number=checker_card_to.card_number,
+                                       amount=amount,
+                                       transaction_date=datetime.now())
             db.add(new_transaction)
             db.commit()
             return "Перевод успешно выполнен"
@@ -41,9 +41,8 @@ def create_transaction_db(card_from, card_to, amount):
 
 
 # Получение все переводы по карте, т.е. История
-def get_history_transaction(card_from_number):
+def get_history_transaction_db(card_from_number):
     db = next(get_db())
-
     card_transaction = db.query(Transfer).filter_by(card_from_number=card_from_number).all()
     if card_transaction:
         return card_transaction
@@ -51,24 +50,21 @@ def get_history_transaction(card_from_number):
         return "Истории нет"
 
 
-# Отмена транзакции.
+# Отмена транзакции
 def cancel_transaction_db(card_from, card_to, amount, transfer_id):
     db = next(get_db())
 
     # Проверка на наличие обеих карт в БД
     checker_card_from = validate_card(card_from, db)
     checker_card_to = validate_card(card_to, db)
-
     if checker_card_from and checker_card_to:
         transaction_to_cancel = db.query(Transfer).filter_by(transfer_id=transfer_id).first()
         if transaction_to_cancel:
             checker_card_from.balance += amount
             checker_card_to.balance -= amount
             transaction_to_cancel.status = False
-
             db.delete(transaction_to_cancel)
             db.commit()
-
             return "Перевод отменён"
         else:
             return "Транзакция не найдена"

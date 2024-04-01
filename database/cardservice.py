@@ -22,7 +22,7 @@ def add_balance_card_db(card_id, balance):
     if new_balance:
         new_balance.balance += balance
     else:
-        return "Данной картыне существует"
+        return "Данной карты не существует"
 
 
 # Вывести все карты определнного пользователя
@@ -55,18 +55,6 @@ def check_card_db(card_number):
         return "Данной карты нет"
 
 
-# Удаление карты
-def delete_card_db(card_id):
-    db = next(get_db())
-    delete_card = db.query(UserCard).filter_by(card_id=card_id).first()
-    if delete_card:
-        db.delete(delete_card)
-        db.commit()
-        return "Карта успешно удалена"
-    else:
-        return "Карта не найдена"
-
-
 # Изменение данных на карте
 def change_info_card_db(card_id, card_name_new):
     db = next(get_db())
@@ -78,3 +66,14 @@ def change_info_card_db(card_id, card_name_new):
     else:
         return "Карта не найдена"
 
+
+# Удаление карты
+def delete_card_db(card_id):
+    db = next(get_db())
+    delete_card = db.query(UserCard).filter_by(card_id=card_id).first()
+    if delete_card:
+        db.delete(delete_card)
+        db.commit()
+        return "Карта успешно удалена"
+    else:
+        return "Карта не найдена"

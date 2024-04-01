@@ -23,8 +23,8 @@ class UserCard(Base):
     user_id = Column(Integer, ForeignKey('users.user_id'))
     card_number = Column(Integer, nullable=False, unique=True)
     balance = Column(Float, default=0)
-    card_name = Column(String, ForeignKey('users.name'))
-    exp_date = Column(Date)
+    card_name = Column(String)
+    exp_date = Column(String)
     user_fk = relationship('User', lazy='subquery')
     cvv = Column(Integer)
 
@@ -37,5 +37,6 @@ class Transfer(Base):
     amount = Column(Float)
     status = Column(Boolean, default=True)
     transaction_date = Column(DateTime)
-    card_from_fk = relationship('UserCard', lazy='subquery')
-    card_to_fk = relationship('UserCart', lazy='subquery')
+
+    card_from_fk = relationship('UserCard', foreign_keys=[card_from_number], lazy='subquery')
+    card_to_fk = relationship('UserCard', foreign_keys=[card_to_number], lazy='subquery')
