@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from card import RegisterCardValidator
+from transfer import TransactionValidate
 from database.transferservice import (create_transaction_db,
                                       get_history_transaction_db,
                                       cancel_transaction_db)
@@ -9,7 +9,7 @@ transfer_router = APIRouter(prefix='/transfers', tags=['Работа с тран
 
 # Создание перевода
 @transfer_router.post('/add')
-async def create_transaction(data: RegisterCardValidator):
+async def create_transaction(data: TransactionValidate):
     result = create_transaction_db(**data.model_dump())
     return {'message': result}
 

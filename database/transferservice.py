@@ -5,7 +5,7 @@ from database import get_db
 
 # Проверка карты
 def validate_card(card_number, db):
-    exact_card = db.query(UserCard).filter_by(card_number=card_number)
+    exact_card = db.query(UserCard).filter_by(card_number=card_number).first()
     return exact_card
 
 
@@ -22,9 +22,9 @@ def create_transaction_db(card_from, card_to, amount):
         # Проверка баланса отправителя
         if checker_card_from.balance >= amount:
             # Минусуем у тего, кто отправляет деньги
-            card_from.balance -= amount
+            checker_card_from.balance -= amount
             # Добавим тому, кто получает
-            card_to.balance += amount
+            checker_card_to.balance += amount
 
             # Сохраняем платёж в БД
             new_transaction = Transfer(card_from_number=checker_card_from.card_number,
